@@ -1,8 +1,21 @@
+import base64
+
+from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
-from recipes.models import Recipe
 from rest_framework import serializers
 
-from .models import Follow, User
+from .models import Follow, User  # isort:skip
+from recipes.models import Recipe  # isort:skip
+
+
+class Base64ImageField(serializers.ImageField):
+    def to_internal_value(self, data):
+        if isinstance(data, str) and data.startswith("data:image"):
+            format, imgstr = data.split(";base64,")
+            ext = format.split("/")[-1]
+            data = ContentFile(base64.b64decode(imgstr), name="temp." + ext)
+
+        return super().to_internal_value(data)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -55,7 +68,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
 
 class PasswordChangeSerializer(serializers.Serializer):
-    model = User
     new_password = serializers.CharField(required=True)
     current_password = serializers.CharField(required=True)
 
@@ -64,6 +76,15 @@ class FollowingRecipesSerializers(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = ("id", "name", "image", "cooking_time")
+
+
+class ShowSmallRecipeSerializer(serializers.ModelSerializer):
+    image = Base64ImageField()
+
+    class Meta:
+        model = Recipe
+        fields = ("id", "name", "image", "cooking_time")
+        read_only_fields = ("id", "name", "image", "cooking_time")
 
 
 class FollowSerializer(serializers.ModelSerializer):
@@ -93,13 +114,9 @@ class FollowSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         if not request or request.user.is_anonymous:
             return False
-        return Follow.objects.filter(
-            user=self.context["request"].user, author=obj
-        ).exists()
+        return Follow.objects.filter(user=request.user, author=obj).exists()
 
     def get_recipes(self, obj):
-        from recipes.serializers import ShowSmallRecipeSerializer
-
         recipe_obj = obj.recipes.all()
         serializer = ShowSmallRecipeSerializer(recipe_obj, many=True)
         return serializer.data

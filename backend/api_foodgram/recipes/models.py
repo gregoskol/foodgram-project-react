@@ -1,4 +1,6 @@
+from colorfield.fields import ColorField
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator
 from django.db import models
 
 User = get_user_model()
@@ -7,12 +9,18 @@ User = get_user_model()
 class Ingredient(models.Model):
     name = models.CharField(max_length=200, verbose_name="Название")
     measurement_unit = models.CharField(
-        max_length=200, verbose_name="Единица измерения"
+        max_length=10, verbose_name="Единица измерения"
     )
 
     class Meta:
         verbose_name = "Ингредиент"
         verbose_name_plural = "Ингредиенты"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "measurement_unit"],
+                name="unique_name_measurement_unit",
+            )
+        ]
 
     def __str__(self):
         return self.name
@@ -22,9 +30,7 @@ class Tag(models.Model):
     name = models.CharField(
         max_length=200, unique=True, verbose_name="Название"
     )
-    color = models.CharField(
-        max_length=7, unique=True, verbose_name="Цвет в HEX"
-    )
+    color = ColorField(default="#FF0000", verbose_name="Цвет в HEX")
     slug = models.SlugField(max_length=200, unique=True, verbose_name="Слаг")
 
     class Meta:
@@ -55,11 +61,19 @@ class Recipe(models.Model):
     name = models.CharField(max_length=200, verbose_name="Название")
     text = models.TextField(verbose_name="Описание")
     cooking_time = models.IntegerField(
-        verbose_name="Время приготовления (в минутах)"
+        validators=[
+            MinValueValidator(
+                1, "Время приготовления не может быть меньше минуты"
+            ),
+        ],
+        verbose_name="Время приготовления (в минутах)",
+    )
+    pub_date = models.DateTimeField(
+        "Дата публикации", auto_now_add=True, db_index=True
     )
 
     class Meta:
-        ordering = ("-id",)
+        ordering = ("-pub_date",)
         verbose_name = "Рецепт"
         verbose_name_plural = "Рецепты"
 
@@ -93,7 +107,12 @@ class IngredientRecipe(models.Model):
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE, verbose_name="Рецепт"
     )
-    amount = models.PositiveIntegerField(verbose_name="Количество")
+    amount = models.PositiveIntegerField(
+        validators=[
+            MinValueValidator(0, "Количество не может быть меньше 0"),
+        ],
+        verbose_name="Количество",
+    )
 
     class Meta:
         verbose_name = "Пара ингредиент-рецепт"

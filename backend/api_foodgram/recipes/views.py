@@ -1,3 +1,4 @@
+from api.permissions import IsAdminOrReadOnly, IsAuthorAdminPermission
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -14,7 +15,6 @@ from .models import (
     ShoppingCart,
     Tag,
 )
-from .permissions import IsAdminOrReadOnly, IsAuthorAdminPermission
 from .serializers import (
     CreateRecipeSerializer,
     FavouriteSerializer,
@@ -127,5 +127,4 @@ class RecipeViewSet(viewsets.ModelViewSet):
             .values("ingredient__name", "ingredient__measurement_unit")
             .annotate(amount=Sum("amount"))
         )
-        print(ingredients_list)
         return download_shopping_list(ingredients_list)

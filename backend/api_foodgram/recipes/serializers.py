@@ -1,9 +1,13 @@
-import base64
-
 from django.contrib.auth import get_user_model
-from django.core.files.base import ContentFile
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
+
+from users.serializers import (  # isort:skip
+    Base64ImageField,
+    ShowSmallRecipeSerializer,
+    UserSerializer,
+)
 
 from .models import (  # isort:skip
     Favorite,
@@ -13,19 +17,8 @@ from .models import (  # isort:skip
     ShoppingCart,
     Tag,
 )
-from users.serializers import UserSerializer  # isort:skip
 
 User = get_user_model()
-
-
-class Base64ImageField(serializers.ImageField):
-    def to_internal_value(self, data):
-        if isinstance(data, str) and data.startswith("data:image"):
-            format, imgstr = data.split(";base64,")
-            ext = format.split("/")[-1]
-            data = ContentFile(base64.b64decode(imgstr), name="temp." + ext)
-
-        return super().to_internal_value(data)
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -73,15 +66,6 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
         )
 
 
-class ShowSmallRecipeSerializer(serializers.ModelSerializer):
-    image = Base64ImageField()
-
-    class Meta:
-        model = Recipe
-        fields = ("id", "name", "image", "cooking_time")
-        read_only_fields = ("id", "name", "image", "cooking_time")
-
-
 class CreateRecipeSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
     author = UserSerializer(read_only=True)
@@ -106,17 +90,11 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
 
     def create_recipe_ingredients(self, ingredients, recipe):
         for ingredient in ingredients:
-            ingredient_id = ingredient["id"]
-            amount = ingredient["amount"]
-            if IngredientRecipe.objects.filter(
+            ingredient = get_object_or_404(Ingredient, id=ingredient.get("id"))
+            IngredientRecipe.objects.bulk_create(
                 recipe=recipe,
-                ingredient=ingredient_id,
-            ).exists():
-                amount += ingredient["amount"]
-            IngredientRecipe.objects.update_or_create(
-                recipe=recipe,
-                ingredient=ingredient_id,
-                defaults={"amount": amount},
+                ingredient=ingredient,
+                amount=ingredient.get("amount"),
             )
 
     def create(self, validated_data):

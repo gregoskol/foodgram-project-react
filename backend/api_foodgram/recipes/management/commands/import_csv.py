@@ -10,8 +10,14 @@ from recipes.models import Ingredient  # isort:skip
 
 
 def import_ingredient(model, reader):
-    for row in reader:
-        model.objects.get_or_create(name=row[0], measurement_unit=row[1])
+    records = [
+        model(
+            name=row[0],
+            measurement_unit=row[1],
+        )
+        for row in reader
+    ]
+    model.objects.bulk_create(records)
     print(f"Импорт в модель {model.__name__} завершен")
 
 
