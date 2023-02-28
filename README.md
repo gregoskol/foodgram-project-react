@@ -1,2 +1,2 @@
 # praktikum_new_diplom dv
-sdfscvbsadыфsd
+sdfscvbsadыфsdsd
