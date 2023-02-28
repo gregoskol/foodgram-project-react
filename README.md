@@ -1,1 +1,1 @@
-# praktikum_new_diplom d
+# praktikum_new_diplom dvc
