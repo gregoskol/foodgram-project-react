@@ -58,10 +58,7 @@ class UserViewSet(
             user.set_password(serializer.validated_data["new_password"])
             user.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
-        else:
-            return Response(
-                serializer.errors, status=status.HTTP_400_BAD_REQUEST
-            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(
         methods=["post", "delete"],
