@@ -109,7 +109,7 @@ class IngredientRecipe(models.Model):
     )
     amount = models.PositiveIntegerField(
         validators=[
-            MinValueValidator(0, "Количество не может быть меньше 0"),
+            MinValueValidator(1, "Количество не может быть меньше 1"),
         ],
         verbose_name="Количество",
     )

@@ -1,4 +1,3 @@
-from api.permissions import IsAdminOrReadOnly, IsAuthorAdminPermission
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -15,7 +14,8 @@ from .models import (
     ShoppingCart,
     Tag,
 )
-from .serializers import (
+
+from .serializers import (  # isort: skip
     CreateRecipeSerializer,
     FavouriteSerializer,
     IngredientSerializer,
@@ -23,7 +23,11 @@ from .serializers import (
     ShowRecipeSerializer,
     TagSerializer,
 )
-from .utils import download_shopping_list
+from .utils import download_shopping_list  # isort: skip
+from api.permissions import (
+    IsAdminOrReadOnly,
+    IsAuthorAdminPermission,
+)  # isort: skip
 
 
 class TagViewSet(viewsets.ModelViewSet):
