@@ -18,7 +18,7 @@ services:
     env_file:
       - ./.env
   frontend:
-    image: gregoskol/foodgram_frontend
+    image: gregoskol/foodgram-frontend
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:

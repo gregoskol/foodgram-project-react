@@ -25,7 +25,7 @@ jobs:
         with:
           push: true
           context: ./frontend
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/foodgram_frontend:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/foodgram-frontend:latest
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
