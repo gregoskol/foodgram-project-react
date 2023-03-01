@@ -73,7 +73,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(), many=True
     )
-    cooking_time = serializers.IntegerField()
+    cooking_time = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Recipe
@@ -88,13 +88,16 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             "cooking_time",
         )
 
+    def cooking_time(self, obj):
+        return int(self.context.get("request").cooking_time)
+
     def create_recipe_ingredients(self, ingredients, recipe):
         for ingredient in ingredients:
             ingredient = get_object_or_404(Ingredient, id=ingredient.get("id"))
             IngredientRecipe.objects.bulk_create(
                 recipe=recipe,
                 ingredient=ingredient,
-                amount=ingredient.get("amount"),
+                amount=int(ingredient.get("amount")),
             )
 
     def create(self, validated_data):
