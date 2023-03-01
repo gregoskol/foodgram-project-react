@@ -51,6 +51,7 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
         many=True, source="ingredientrecipe_set"
     )
     tags = TagSerializer(many=True)
+    author = UserSerializer(read_only=True)
 
     class Meta:
         model = Recipe

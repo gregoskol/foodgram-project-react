@@ -28,10 +28,6 @@ class User(AbstractUser):
     def __str__(self):
         return str(self.username)
 
-    def get_full_name(self):
-        full_name = f"{self.first_name} {self.last_name}"
-        return full_name.strip()
-
 
 class Follow(models.Model):
     user = models.ForeignKey(
