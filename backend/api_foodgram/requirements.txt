@@ -4,6 +4,7 @@ django-filter
 djangorestframework==3.12.4
 djangorestframework-simplejwt==4.7.2
 djoser
+gunicorn==20.0.4
 Pillow==9.0.0
 psycopg2-binary==2.8.6
 python-dotenv
