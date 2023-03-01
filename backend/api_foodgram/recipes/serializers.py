@@ -94,7 +94,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             IngredientRecipe.objects.bulk_create(
                 recipe=recipe,
                 ingredient=ingredient,
-                amount=int(ingredient.get("amount")),
+                amount=ingredient.get("amount"),
             )
 
     def create(self, validated_data):
