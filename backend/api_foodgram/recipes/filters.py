@@ -1,8 +1,19 @@
 from django_filters import ModelMultipleChoiceFilter
 from django_filters.rest_framework import FilterSet, filters
 
-from recipes.models import Recipe, Tag  # isort:skip
+from recipes.models import Ingredient, Recipe, Tag  # isort:skip
 from users.models import User  # isort:skip
+
+
+class IngredientsFilter(filters.FilterSet):
+    name = filters.CharFilter(
+        field_name="name",
+        lookup_expr="icontains",
+    )
+
+    class Meta:
+        model = Ingredient
+        fields = ("name",)
 
 
 class TagFilter(FilterSet):

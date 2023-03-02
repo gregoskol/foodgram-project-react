@@ -9,7 +9,7 @@ from api.permissions import (  # isort: skip
     IsAdminOrReadOnly,
     IsAuthorAdminPermission,
 )
-from .filters import TagFilter  # isort: skip
+from .filters import IngredientsFilter, TagFilter  # isort: skip
 from .models import (  # isort: skip
     Favorite,
     Ingredient,
@@ -40,6 +40,8 @@ class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (IsAdminOrReadOnly,)
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = IngredientsFilter
     pagination_class = None
 
 
