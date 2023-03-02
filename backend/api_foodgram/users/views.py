@@ -4,8 +4,8 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Follow, User
-from .serializers import (
+from .models import Follow, User  # isort: skip
+from .serializers import (  # isort: skip
     FollowSerializer,
     PasswordChangeSerializer,
     RegistrationSerializer,
@@ -82,7 +82,7 @@ class UserViewSet(
                     {"errors": "Вы уже подписаны на этого автора"},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
-            obj = Follow.objects.create(author=author, user=user)
+            Follow.objects.create(author=author, user=user)
             serializer = FollowSerializer(author, context={"request": request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         if request.method == "DELETE":
