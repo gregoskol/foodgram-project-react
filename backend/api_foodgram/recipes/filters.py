@@ -1,7 +1,6 @@
 import django_filters as filters
 
-from recipes.models import Ingredient, Recipe, Tag  # isort:skip
-from users.models import User  # isort:skip
+from recipes.models import Ingredient, Recipe  # isort:skip
 
 
 class IngredientsFilter(filters.FilterSet):
