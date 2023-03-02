@@ -63,6 +63,8 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
             "image",
             "text",
             "cooking_time",
+            "is_favorited",
+            "is_in_shopping_cart",
         )
 
 
