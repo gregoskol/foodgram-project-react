@@ -88,11 +88,6 @@ class ShowSmallRecipeSerializer(serializers.ModelSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
-    email = serializers.ReadOnlyField()
-    id = serializers.ReadOnlyField()
-    username = serializers.ReadOnlyField()
-    first_name = serializers.ReadOnlyField()
-    last_name = serializers.ReadOnlyField()
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
     is_subscribed = serializers.SerializerMethodField()
@@ -100,8 +95,8 @@ class FollowSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            "email",
             "id",
+            "email",
             "username",
             "first_name",
             "last_name",
@@ -109,6 +104,7 @@ class FollowSerializer(serializers.ModelSerializer):
             "recipes",
             "recipes_count",
         )
+        read_only_fields = fields
 
     def get_is_subscribed(self, obj):
         request = self.context.get("request")
