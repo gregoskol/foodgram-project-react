@@ -27,14 +27,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = str(os.getenv("DJANGO_SECRET_KEY"))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
+AUTH_USER_MODEL = "users.User"
 
 INSTALLED_APPS = [
+    "users",
+    "recipes",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -42,8 +45,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework.authtoken",
-    "recipes",
-    "users",
     "api",
     "rest_framework",
     "djoser",
@@ -137,7 +138,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-AUTH_USER_MODEL = "users.User"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
