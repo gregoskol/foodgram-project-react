@@ -5,7 +5,7 @@ from recipes.models import Ingredient, Recipe, Tag  # isort:skip
 from users.models import User  # isort:skip
 
 
-class IngredientsFilter(filters.FilterSet):
+class IngredientsFilter(FilterSet):
     name = filters.CharFilter(
         field_name="name",
         lookup_expr="icontains",
