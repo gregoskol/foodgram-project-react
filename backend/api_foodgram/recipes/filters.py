@@ -1,9 +1,10 @@
-from django_filters.rest_framework import FilterSet, filters
+import django_filters as filters
 
-from recipes.models import Ingredient, Recipe  # isort: skip
+from recipes.models import Ingredient, Recipe, Tag  # isort:skip
+from users.models import User  # isort:skip
 
 
-class IngredientsFilter(FilterSet):
+class IngredientsFilter(filters.FilterSet):
     name = filters.CharFilter(
         field_name="name",
         lookup_expr="icontains",
@@ -14,7 +15,7 @@ class IngredientsFilter(FilterSet):
         fields = ("name",)
 
 
-class TagFilter(FilterSet):
+class RecipeFilter(filters.FilterSet):
     tags = filters.AllValuesMultipleFilter(
         field_name="tags__slug",
         lookup_expr="iexact",
@@ -40,7 +41,7 @@ class TagFilter(FilterSet):
 
     def get_favorite(self, queryset, name, item_value):
         if self.request.user.is_authenticated and item_value:
-            return queryset.filter(in_favorite__user=self.request.user)
+            return queryset.filter(favorite__user=self.request.user)
 
     def get_shopping(self, queryset, name, item_value):
         if self.request.user.is_authenticated and item_value:

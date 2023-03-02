@@ -9,7 +9,7 @@ from api.permissions import (  # isort: skip
     IsAdminOrReadOnly,
     IsAuthorAdminPermission,
 )
-from .filters import IngredientsFilter, TagFilter  # isort: skip
+from .filters import IngredientsFilter, RecipeFilter  # isort: skip
 from .models import (  # isort: skip
     Favorite,
     Ingredient,
@@ -32,15 +32,21 @@ from .utils import download_shopping_list  # isort: skip
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-    permission_classes = (IsAdminOrReadOnly,)
+    permission_classes = [
+        IsAdminOrReadOnly,
+    ]
     pagination_class = None
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    permission_classes = (IsAdminOrReadOnly,)
-    filter_backends = [DjangoFilterBackend]
+    permission_classes = [
+        IsAdminOrReadOnly,
+    ]
+    filter_backends = [
+        DjangoFilterBackend,
+    ]
     filterset_class = IngredientsFilter
     pagination_class = None
 
@@ -51,8 +57,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
         IsAuthorAdminPermission,
         permissions.IsAuthenticatedOrReadOnly,
     ]
-    filter_backends = (DjangoFilterBackend,)
-    filter_class = TagFilter
+    filter_backends = [
+        DjangoFilterBackend,
+    ]
+    filterset_class = RecipeFilter
 
     def get_serializer_class(self):
         if self.request.method == "GET":
