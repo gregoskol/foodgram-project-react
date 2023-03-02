@@ -1,8 +1,6 @@
-from django_filters import ModelMultipleChoiceFilter
 from django_filters.rest_framework import FilterSet, filters
 
-from recipes.models import Ingredient, Recipe, Tag  # isort:skip
-from users.models import User  # isort:skip
+from recipes.models import Ingredient, Recipe
 
 
 class IngredientsFilter(FilterSet):
@@ -43,9 +41,9 @@ class TagFilter(FilterSet):
     def get_favorite(self, queryset, name, item_value):
         if self.request.user.is_authenticated and item_value:
             queryset = queryset.filter(in_favorite__user=self.request.user)
-        return queryset
+            return queryset
 
     def get_shopping(self, queryset, name, item_value):
         if self.request.user.is_authenticated and item_value:
             queryset = queryset.filter(shopping_cart__user=self.request.user)
-        return queryset
+            return queryset
