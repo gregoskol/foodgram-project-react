@@ -69,6 +69,20 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
             "is_in_shopping_cart",
         )
 
+    def get_is_favorited(self, obj):
+        request = self.context.get("request")
+        if not request or request.user.is_anonymous:
+            return False
+        return Favorite.objects.filter(recipe=obj, user=request.user).exists()
+
+    def get_is_in_shopping_cart(self, obj):
+        request = self.context.get("request")
+        if not request or request.user.is_anonymous:
+            return False
+        return ShoppingList.objects.filter(
+            recipe=obj, user=request.user
+        ).exists()
+
 
 class CreateRecipeSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
