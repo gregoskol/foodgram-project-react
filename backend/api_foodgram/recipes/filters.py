@@ -40,10 +40,8 @@ class TagFilter(FilterSet):
 
     def get_favorite(self, queryset, name, item_value):
         if self.request.user.is_authenticated and item_value:
-            queryset = queryset.filter(in_favorite__user=self.request.user)
-            return queryset
+            return queryset.filter(in_favorite__user=self.request.user)
 
     def get_shopping(self, queryset, name, item_value):
         if self.request.user.is_authenticated and item_value:
-            queryset = queryset.filter(shopping_cart__user=self.request.user)
-            return queryset
+            return queryset.filter(shopping_cart__user=self.request.user)
