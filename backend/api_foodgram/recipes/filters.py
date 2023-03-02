@@ -2,6 +2,17 @@ import django_filters as filters
 
 from recipes.models import Ingredient, Recipe  # isort:skip
 
+BOOLEAN_CHOICES = (
+    (
+        0,
+        "false",
+    ),
+    (
+        1,
+        "true",
+    ),
+)
+
 
 class IngredientsFilter(filters.FilterSet):
     name = filters.CharFilter(
@@ -20,28 +31,38 @@ class RecipeFilter(filters.FilterSet):
         lookup_expr="iexact",
         label="Tags",
     )
-    is_favorited = filters.BooleanFilter(
+    is_favorited = filters.ChoiceFilter(
+        choices=BOOLEAN_CHOICES,
         method="get_favorite",
         label="Favorited",
     )
-    is_in_shopping_cart = filters.BooleanFilter(
+    is_in_shopping_cart = filters.ChoiceFilter(
+        choices=BOOLEAN_CHOICES,
         method="get_shopping",
-        label="Is in shopping list",
+        label="Is in shopping cart",
     )
 
     class Meta:
         model = Recipe
         fields = (
-            "is_favorited",
             "author",
             "tags",
-            "is_in_shopping_cart",
         )
 
-    def get_favorite(self, queryset, name, item_value):
-        if self.request.user.is_authenticated and item_value:
-            return queryset.filter(favorite__user=self.request.user)
+    def get_is_favorited(self, queryset, name, value):
+        user = self.request.user
+        value = int(value)
+        if user.is_anonymous:
+            return Recipe.objects.none() if value else queryset
+        if value:
+            return queryset.filter(favorite__user=user)
+        return queryset.exclude(favorite__user=user)
 
-    def get_shopping(self, queryset, name, item_value):
-        if self.request.user.is_authenticated and item_value:
-            return queryset.filter(shopping_cart__user=self.request.user)
+    def get_is_in_shopping_cart(self, queryset, name, value):
+        user = self.request.user
+        value = int(value)
+        if user.is_anonymous:
+            return Recipe.objects.none() if value else queryset
+        if value:
+            return queryset.filter(shopping_cart__user=user)
+        return queryset.exclude(shopping_cart__user=user)
