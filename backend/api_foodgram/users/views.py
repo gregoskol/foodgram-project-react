@@ -5,12 +5,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from .models import Follow, User
-from .serializers import (
-    FollowSerializer,
-    PasswordChangeSerializer,
-    RegistrationSerializer,
-    UserSerializer,
-)
+from .serializers import (FollowSerializer, PasswordChangeSerializer,
+                          RegistrationSerializer, UserSerializer)
 
 
 class UserViewSet(

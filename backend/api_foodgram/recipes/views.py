@@ -5,8 +5,12 @@ from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .filters import TagFilter
-from .models import (
+from api.permissions import (  # isort: skip
+    IsAdminOrReadOnly,
+    IsAuthorAdminPermission,
+)
+from .filters import TagFilter  # isort: skip
+from .models import (  # isort: skip
     Favorite,
     Ingredient,
     IngredientRecipe,
@@ -14,7 +18,6 @@ from .models import (
     ShoppingCart,
     Tag,
 )
-
 from .serializers import (  # isort: skip
     CreateRecipeSerializer,
     FavouriteSerializer,
@@ -24,10 +27,6 @@ from .serializers import (  # isort: skip
     TagSerializer,
 )
 from .utils import download_shopping_list  # isort: skip
-from api.permissions import (
-    IsAdminOrReadOnly,
-    IsAuthorAdminPermission,
-)  # isort: skip
 
 
 class TagViewSet(viewsets.ModelViewSet):

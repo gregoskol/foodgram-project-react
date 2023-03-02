@@ -2,11 +2,11 @@ from django.urls import include, path
 from djoser.views import TokenCreateView, TokenDestroyView
 from rest_framework import routers
 
-from recipes.views import (
+from recipes.views import (  # isort: skip
     IngredientViewSet,
     RecipeViewSet,
     TagViewSet,
-)  # isort: skip
+)
 from users.views import UserViewSet  # isort: skip
 
 router_v1 = routers.DefaultRouter()
