@@ -49,7 +49,7 @@ class RecipeFilter(filters.FilterSet):
             "tags",
         )
 
-    def get_is_favorited(self, queryset, name, value):
+    def get_favorite(self, queryset, name, value):
         user = self.request.user
         value = int(value)
         if user.is_anonymous:
@@ -58,7 +58,7 @@ class RecipeFilter(filters.FilterSet):
             return queryset.filter(favorite__user=user)
         return queryset.exclude(favorite__user=user)
 
-    def get_is_in_shopping_cart(self, queryset, name, value):
+    def get_shopping(self, queryset, name, value):
         user = self.request.user
         value = int(value)
         if user.is_anonymous:
