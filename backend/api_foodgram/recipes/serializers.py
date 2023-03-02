@@ -51,6 +51,8 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
     )
     tags = TagSerializer(many=True)
     author = UserSerializer(read_only=True)
+    is_favorited = serializers.SerializerMethodField()
+    is_in_shopping_cart = serializers.SerializerMethodField()
 
     class Meta:
         model = Recipe
