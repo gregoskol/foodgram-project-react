@@ -19,7 +19,7 @@ sudo apt install docker.io
 sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 ```
-Скопировать файлы docker-compose.yaml, nginx/default.conf из проекта на сервер в home/<USER>/docker-compose.yaml и home/<USER>/nginx/default.conf соответственно
+Скопировать файлы docker-compose.yaml, nginx.conf и папку docs/ из проекта на сервер в home/<USER>/
 ```sh
 scp ./<FILENAME> <USER>@<HOST>:/home/<USER>/...
 ```
@@ -31,7 +31,6 @@ scp ./<FILENAME> <USER>@<HOST>:/home/<USER>/...
 ## Установка:
 При пуше в ветку main запустится Workflow:
 *Проверка кода на соответствие PEP8
-*Проверка pytest
 *Сборка и пуш образов на Docker Hub
 *Деплой проекта на сервер
 *Уведомление в Telegram об успешном завершении Workflow
@@ -40,19 +39,16 @@ scp ./<FILENAME> <USER>@<HOST>:/home/<USER>/...
 ```sh
 ssh <USER>@<HOST>
 ```
-Собрать статические файлы:
-```sh
-docker-compose exec web python manage.py collectstatic --no-input
-```
 Выполнить миграции:
 ```sh
-docker-compose exec web python manage.py makemigrations
-docker-compose exec web python manage.py migrate --noinput
+docker-compose exec backend python manage.py migrate --noinput
 ```
 Создать суперпользователя:
 ```sh
-docker-compose exec web python manage.py createsuperuser
+docker-compose exec backend python manage.py createsuperuser
 ```
 
 ## Развернутый проект:
-http://158.160.12.177/redoc/
+http://158.160.12.177/
+login: admin@yandex.ru 
+password: 123
