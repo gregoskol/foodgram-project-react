@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import mixins, status, viewsets
+from rest_framework import generics, mixins, permissions, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
@@ -11,6 +12,7 @@ from .serializers import (  # isort: skip
     RegistrationSerializer,
     UserSerializer,
 )
+from api.paginator import LimitPaginator  # isort: skip
 
 
 class UserViewSet(
@@ -95,14 +97,11 @@ class UserViewSet(
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    @action(
-        detail=False, methods=["get"], permission_classes=(IsAuthenticated,)
-    )
-    def subscriptions(self, request):
-        user = self.request.user
-        users = User.objects.filter(following__user=user)
-        serializer = FollowSerializer(users, many=True)
-        page = self.paginate_queryset(users)
-        if page is not None:
-            return self.get_paginated_response(serializer.data)
-        return Response(serializer.data)
+
+class FollowListView(ListAPIView):
+    serializer_class = FollowSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = LimitPaginator
+
+    def get_queryset(self):
+        return User.objects.filter(following__user=self.request.user)
