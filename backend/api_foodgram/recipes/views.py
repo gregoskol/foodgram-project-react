@@ -3,9 +3,9 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 
+from api.paginator import LimitPaginator  # isort: skip
 from api.permissions import (  # isort: skip
     IsAdminOrReadOnly,
     IsAuthorAdminPermission,
@@ -62,7 +62,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         DjangoFilterBackend,
     ]
     filterset_class = RecipeFilter
-    pagination_class = LimitOffsetPagination
+    pagination_class = LimitPaginator
 
     def get_serializer_class(self):
         if self.request.method == "GET":
