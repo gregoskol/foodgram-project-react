@@ -39,10 +39,6 @@ scp ./<FILENAME> <USER>@<HOST>:/home/<USER>/...
 ```sh
 ssh <USER>@<HOST>
 ```
-Выполнить миграции:
-```sh
-docker-compose exec backend python manage.py migrate --noinput
-```
 Создать суперпользователя:
 ```sh
 docker-compose exec backend python manage.py createsuperuser
@@ -50,5 +46,3 @@ docker-compose exec backend python manage.py createsuperuser
 
 ## Развернутый проект:
 http://158.160.12.177/
-login: admin@yandex.ru 
-password: 123
